@@ -1,0 +1,68 @@
+main {
+  padding: 30px 20px 100px 20px;
+}
+
+.item-list {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border-bottom: 1px solid #ededef;
+  padding: 20px 0px 20px 0px;
+}
+
+.item-list__img {
+  width: 150px;
+  height: 150px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 15px;
+  margin-right: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.item-list__img img {
+  width: 100%;
+  height: 100%;
+}
+
+.item-list__info {
+  height: 130px;
+  display: flex;
+  /* flex-direction 방향에 따라 시작 기준이 달라짐 */
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+}
+.item-list__info div {
+  margin-bottom: 10px;
+}
+
+.item-list__info-meta {
+  font-size: smaller;
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.item-list__info-price {
+  font-weight: bold;
+  font-size: medium;
+}
+
+.write-btn {
+  background-color: var(--button-primary);
+  position: fixed;
+  bottom: 100px;
+  right: 30px;
+  color: white;
+  padding: 10px 15px 10px 15px;
+  border-radius: 20px;
+  font-size: 15px;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.write-btn:hover {
+  background-color: var(--button-hover);
+}
