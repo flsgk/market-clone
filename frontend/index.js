@@ -9,7 +9,7 @@ const calcTime = (timestamp) => {
   else if (minute > 0) return `${minute}분 전`;
   else if (second > 0)
     return `${second}초 전`; // undefined 가 뜨지 않게 0도 대상에 포함
-  else "방금 전";
+  else return "방금 전";
 };
 
 const renderData = (data) => {
