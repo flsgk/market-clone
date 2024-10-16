@@ -62,6 +62,12 @@ async def get_image(item_id):
                               """).fetchone()[0] # 하나를 가져올 때의 문법 (추가 학습 필요)
     return Response(content=bytes.fromhex(image_bytes)) # image_bytes 를 가져와서 해석 > bytes 로 변환해서 Response를 하겠다.
 
+
+@app.post('/signup')
+def signup(id:Annotated[str,Form()],password:Annotated[str,Form()]):
+    print(id,password)
+    return '200'
+
      
 
 app.mount("/", StaticFiles(directory="frontend", html=True), name="static")
