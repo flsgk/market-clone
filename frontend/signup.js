@@ -26,8 +26,8 @@ const handleSubmit = async (event) => {
     const data = await res.json(); // 서버로부터 data 를 받아왔을 때
     if (data === "200") {
       // 데이터가 200이면
-      div.innerText = "회원가입에 성공했습니다.";
-      div.style.color = "blue";
+      alert("회원가입에 성공했습니다.");
+      window.location.pathname = "/login.html";
     }
   } else {
     // 그렇지 않으면
