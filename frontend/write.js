@@ -1,5 +1,4 @@
 const form = document.getElementById("write-form");
-// id를 통해서 form 요소를 가져오는 것
 
 const handleSubmitForm = async (event) => {
   event.preventDefault();
@@ -18,7 +17,8 @@ const handleSubmitForm = async (event) => {
   } catch (e) {
     console.error(e); // 그렇지 않으면 에러를 출력한다.
   }
+  window.location.pathname = "/";
 };
 
 form.addEventListener("submit", handleSubmitForm);
-//submit 이라는 이벤트를 하면, handleSubmitForm이라는 함수를 실행한다.
+// eventTarget.addEventListener('eventType', function)

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, Form, Response
+from fastapi import FastAPI, UploadFile, Form, Response, Depends
 # FastAPI 라이브러리에서 주요 기능을 가져온다.
 # FastAPI : 애플리케이션 인스턴스를 생성
 # UploadFile : 파일 업로드, Form : html 폼 데이터를 처리, Response : 사용자 정의 응답 반환
@@ -39,23 +39,39 @@ SECRET = "super-coding"
 manager = LoginManager(SECRET,'/login')
 
 @manager.user_loader()
-def query_user(id):
+def query_user(data):
     con.row_factory = sqlite3.Row
     cur = con.cursor()
-    user = cur.execute(f"""
-                       SELECT * from users WHERE id = '{id}'
-                       """).fetchone()
+    
+    # data가 dict인지 체크
+    if isinstance(data, dict) and 'id' in data:
+        user_id = data['id']
+    else:
+        user_id = data  # 그냥 문자열일 경우
+
+    user = cur.execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
     return user
 
 @app.post('/login')
 def login(id:Annotated[str,Form()],
           password:Annotated[str,Form()]):
     user = query_user(id)
-    print(user['password'])
-    if not user:
-        raise InvalidCredentialsException
+    # print(user['password'])
+    # 특정 컬럼만 조회하려면 con.row_factory = sqlite3.Row 로 컬럼과 같이 가져와야 한다.
+    if user is None:
+        raise InvalidCredentialsException # 401 코드를 자동으로 생성해서 내려주는 것
     elif password != user['password']:
         raise InvalidCredentialsException
+    
+    access_token = manager.create_access_token(data={
+        'sub': {
+            'id': user['id'],  
+            'name' : user['name'],
+            'email': user['email']
+        }    
+    })
+    
+    return {'access_token':access_token}
     
 @app.post('/signup')
 def signup(id:Annotated[str,Form()],
@@ -91,14 +107,15 @@ async def create_item(image:UploadFile,
 
 #모든 아이템 가져오기
 @app.get('/items') 
-async def get_itmes(): 
+async def get_itmes(user=Depends(manager)):
     con.row_factory = sqlite3.Row #데이터의 컬럼명도 같이 가져오는 문법, 이를 통해 각 행을 키-값 쌍으로 쉽게 접근할 수 있다.
     cur = con.cursor()
     rows = cur.execute(f"""
                        SELECT * from items;
                        """).fetchall()
-    return JSONResponse(jsonable_encoder(
-        dict(row) for row in rows))
+    
+    
+    return JSONResponse(jsonable_encoder(dict(row) for row in rows))
     # 가져온 데이터를 sonable_encoder로 JSON 형식으로 변환 > JSONResponse 를 사용해서 반환
     
     
